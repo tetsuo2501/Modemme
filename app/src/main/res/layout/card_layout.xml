@@ -9,13 +9,14 @@
         android:text=""
         android:id="@+id/titolo" />
 
-    <ImageView
+    <com.android.volley.toolbox.NetworkImageView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/immagine"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/titolo"/>
+        android:layout_below="@+id/titolo"
+        />
 
     <TextView
         android:layout_width="fill_parent"
