@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    android:contentAuthority="cinfo.leonardofontana.modemme.sync.SyncAdapter"
+    android:accountType="info.leonardofontana.modemme.sync.SyncAdapter"
+    android:userVisible="false"
+    android:supportsUploading="false"
+    android:allowParallelSyncs="false"
+    android:isAlwaysSyncable="true"
+
+</PreferenceScreen>
