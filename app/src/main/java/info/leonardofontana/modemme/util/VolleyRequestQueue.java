@@ -47,7 +47,8 @@ public class VolleyRequestQueue {
                     }
 
                     private Bitmap filterImage(Bitmap in){
-                        Matrix transform = new Matrix();
+                        //todo: creare filtro per resize immagini
+                        /*Matrix transform = new Matrix();
                         float scala = in.getWidth()/IMAGE_WIDTH;
                         transform.preScale(scala,scala);
                         transform.postTranslate(
@@ -66,7 +67,8 @@ public class VolleyRequestQueue {
                                 //todo: Settare i valori per centrare l'immagine
                                 Bitmap.createBitmap(out, 0, 0, IMAGE_WIDTH, MAX_HEIGHT):
                                 out;
-
+                        */
+                        return in;
                     }
                 });
     }

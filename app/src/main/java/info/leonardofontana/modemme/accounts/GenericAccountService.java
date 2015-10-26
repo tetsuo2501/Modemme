@@ -11,12 +11,14 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import info.leonardofontana.modemme.model.FeedContract;
+
 /**
  * Created by tetsu on 22/10/2015.
  */
 public class GenericAccountService extends Service {
     private static final String TAG = "GenericAccountService";
-    private static final String ACCOUNT_TYPE = "com.example.android.network.sync.basicsyncadapter";
+
     public static final String ACCOUNT_NAME = "sync";
     private Authenticator mAuthenticator;
 
@@ -33,8 +35,8 @@ public class GenericAccountService extends Service {
         //
         // This string should *not* be localized. If the user switches locale, we would not be
         // able to locate the old account, and may erroneously register multiple accounts.
-        final String accountName = ACCOUNT_NAME;
-        return new Account(accountName, ACCOUNT_TYPE);
+
+        return new Account(ACCOUNT_NAME, FeedContract.CONTENT_AUTHORITY);
     }
 
     @Override

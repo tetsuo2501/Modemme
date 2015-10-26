@@ -107,12 +107,17 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
 
         @Override
         public void onResponse(Document response) {
+            if(response == null)
+                Log.d(TAG,"response null");
             final FeedParser feedParser = new FeedParser();
             ArrayList<ContentProviderOperation> batch = new ArrayList<ContentProviderOperation>();
             HashMap<String, FeedParser.Entry> entryMap = new HashMap<String, FeedParser.Entry>();
             final List<FeedParser.Entry> entries = feedParser.parse(response);
 
-
+            if(entries == null){
+                Log.e(TAG,"Il documento è nullo!!!!");
+                return;
+            }
             for (FeedParser.Entry e : entries) {
                 entryMap.put(e.id, e);
             }
@@ -124,23 +129,28 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
             assert c != null;
             Log.i(TAG, "Found " + c.getCount() + " local entries. Computing merge solution...");
 
-            int id = c.getInt(COL_ID);
-            String entryId = c.getString(COL_ENTRY_ID);
-            String title = c.getString(COL_TITLE);
-            String link = c.getString(COL_LINK);
-            long published = c.getLong(COL_PUB);
-            String author = c.getString(COL_AUTH);
-            String content = c.getString(COL_CONTENT);
-            String description = c.getString(COL_DESCR);
-            int numCommenti = c.getInt(COL_NUM_COMM);
-            String media = c.getString(COL_MEDIA);
-            String commentsLink = c.getString(COL_COMM);
 
             //todo: Inserire logica aggiornamento database
             while (c.moveToNext()) {
+                Log.d(TAG, "sposto il cursore");
                 syncResult.stats.numEntries++;
+                Log.d(TAG, "++entries");
+                int id = c.getInt(COL_ID);
+                Log.d(TAG, "Get id" + id);
+                String entryId = c.getString(COL_ENTRY_ID);
+                String title = c.getString(COL_TITLE);
+                String link = c.getString(COL_LINK);
+                long published = c.getLong(COL_PUB);
+                String author = c.getString(COL_AUTH);
+                String content = c.getString(COL_CONTENT);
+                String description = c.getString(COL_DESCR);
+                int numCommenti = c.getInt(COL_NUM_COMM);
+                String media = c.getString(COL_MEDIA);
+                String commentsLink = c.getString(COL_COMM);
                 FeedParser.Entry match = entryMap.get(entryId);
+                Log.d(TAG, "fine ritiro dei valori da db");
                 if (match != null) {
+
                     // Entry exists. Remove from entry map to prevent insert later.
                     entryMap.remove(entryId);
                     // Check to see if the entry needs to be updated
@@ -149,7 +159,7 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                     if ((match.titolo != null && !match.titolo.equals(title)) ||
                             (match.link != null && !match.link.equals(link)) ||
                             (match.numeroCommenti != numCommenti) ||
-                            (match.descrizione != null && !match.descrizione.equals(description))||
+                            (match.descrizione != null && !match.descrizione.equals(description)) ||
                             (match.mediaLink != null && !match.link.equals(media)) ||
                             (match.data != published)) {
                         // Update existing record
@@ -163,7 +173,7 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                                 .withValue(FeedContract.Entry.COLUMN_DESCRIPTION, description)
                                 .withValue(FeedContract.Entry.COLUMN_NUMBERS_COMMENT, numCommenti)
                                 .withValue(FeedContract.Entry.COLUMN_MEDIA_LINK, media)
-                                .withValue(FeedContract.Entry.COLUMN_COMMENT,commentsLink)
+                                .withValue(FeedContract.Entry.COLUMN_COMMENT, commentsLink)
                                 .build());
                         syncResult.stats.numUpdates++;
                     } else {
@@ -177,8 +187,9 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                     batch.add(ContentProviderOperation.newDelete(deleteUri).build());
                     syncResult.stats.numDeletes++;
                 }
-                c.close();
-
+            }
+            c.close();
+            Log.d(TAG, "Inserisco nuovi valori");
                 // Add new items
                 for (FeedParser.Entry e : entryMap.values()) {
                     Log.i(TAG, "Scheduling insert: entry_id=" + e.id);
@@ -187,16 +198,17 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                             .withValue(FeedContract.Entry.COLUMN_NAME_TITLE, e.titolo)
                             .withValue(FeedContract.Entry.COLUMN_NAME_LINK, e.link)
                             .withValue(FeedContract.Entry.COLUMN_NAME_PUBLISHED, e.data)
-                            .withValue(FeedContract.Entry.COLUMN_CONTENT, content)
-                            .withValue(FeedContract.Entry.COLUMN_DESCRIPTION, description)
-                            .withValue(FeedContract.Entry.COLUMN_NUMBERS_COMMENT, numCommenti)
-                            .withValue(FeedContract.Entry.COLUMN_MEDIA_LINK, media)
-                            .withValue(FeedContract.Entry.COLUMN_COMMENT,commentsLink)
+                            .withValue(FeedContract.Entry.COLUMN_CONTENT, e.contenuto)
+                            .withValue(FeedContract.Entry.COLUMN_DESCRIPTION, e.descrizione)
+                            .withValue(FeedContract.Entry.COLUMN_NUMBERS_COMMENT, e.numeroCommenti)
+                            .withValue(FeedContract.Entry.COLUMN_MEDIA_LINK, e.mediaLink)
+                            .withValue(FeedContract.Entry.COLUMN_COMMENT,e.linkCommenti)
                             .build());
                     syncResult.stats.numInserts++;
                     Log.i(TAG, "Merge solution ready. Applying batch update");
                     try {
                         contentResolver.applyBatch(FeedContract.CONTENT_AUTHORITY, batch);
+                        Log.d(TAG,"Batch effettuato");
                     }
                     catch (RemoteException e1){
                         Log.e(TAG, "Eccezione di remote exception durante inserimento dati",e1);
@@ -214,9 +226,7 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                 }
 
 
-            }
+
         }
     }
 }
-
-

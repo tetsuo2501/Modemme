@@ -28,16 +28,18 @@ public class FeedParser {
     public static final String TAG_CONTENT = "content:encoded";
     public static final String TAG_NUM_COMMENTS ="slash:comments";
     public static final String TAG_ENCLOSURE = "enclosure";
-
-
-    private static final String ENTRY = "entry";
+    private static final String TAG_ENTRY = "item";
 
     public List<Entry> parse(Document d){
         List<Entry> entries = new ArrayList<Entry>();
-        d.getDocumentElement().normalize();
-        NodeList nl = d.getElementsByTagName(ENTRY);
-        if(nl == null || nl.getLength() < 1)
-            return null;
+        //d.getDocumentElement().normalize();
+        NodeList nl = d.getElementsByTagName(TAG_ENTRY);
+        if(nl == null || nl.getLength() < 1) {
+            Log.w(TAG,"Attenzione il documento non contiene nodi");
+            return entries;
+        }
+        Log.i(TAG,"Il documento contiene"+ nl.getLength() + " nodi");
+
         for( int i = 0; i < nl.getLength(); i++){
             entries.add(parseEntry(nl.item(i)));
         }
@@ -47,11 +49,16 @@ public class FeedParser {
     private Entry parseEntry(Node n){
         DateFormat formatoData = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", Locale.ENGLISH);
         Element e = (Element)n;
+
         long data = 0l;
+        Log.d(TAG, "Titolo: " + ((Element) e.getElementsByTagName(TAG_TITLE).item(0)).getChildNodes().item(0).getNodeValue());
+        Log.d(TAG,"Enclosure URL "+((Element) e.getElementsByTagName(TAG_ENCLOSURE).item(0)).getAttribute("url"));
         try {
+
+
             data = (formatoData.parse(
-                    e.getElementsByTagName(TAG_DATE).item(0).getNodeValue()))
-                    .getTime();
+                    ((Element) e.getElementsByTagName(TAG_DATE).item(0)).getChildNodes()
+                            .item(0).getNodeValue())).getTime();
         } catch (ParseException e1) {
             Log.e(TAG, "Errore durante il parsing della data", e1);
         }
@@ -59,16 +66,17 @@ public class FeedParser {
         //todo: implementare metodo
 
         return new Entry(
-                e.getElementsByTagName(TAG_LINK).item(0).getNodeValue(),
-                e.getElementsByTagName(TAG_TITLE).item(0).getNodeValue(),
-                e.getElementsByTagName(TAG_DESCRIPTION).item(0).getNodeValue(),
-                e.getElementsByTagName(TAG_AUTH).item(0).getNodeValue(),
-                e.getElementsByTagName(TAG_LINK).item(0).getNodeValue(),
-                e.getElementsByTagName(TAG_ENCLOSURE).item(0).getAttributes().item(0).getNodeValue(),
-                e.getElementsByTagName(TAG_COMMENT).item(0).getNodeValue(),
+                ((Element) e.getElementsByTagName(TAG_LINK).item(0)).getChildNodes().item(0).getNodeValue(),
+                ((Element) e.getElementsByTagName(TAG_TITLE).item(0)).getChildNodes().item(0).getNodeValue(),
+                ((Element) e.getElementsByTagName(TAG_DESCRIPTION).item(0)).getChildNodes().item(0).getNodeValue(),
+                ((Element) e.getElementsByTagName(TAG_AUTH).item(0)).getChildNodes().item(0).getNodeValue(),
+                ((Element) e.getElementsByTagName(TAG_LINK).item(0)).getChildNodes().item(0).getNodeValue(),
+                ((Element) e.getElementsByTagName(TAG_ENCLOSURE).item(0)).getAttribute("url"),
+                ((Element) e.getElementsByTagName(TAG_COMMENT).item(0)).getChildNodes().item(0).getNodeValue(),
                 data,
                 e.getElementsByTagName(TAG_CONTENT).item(0).getNodeValue(),
-                Integer.getInteger( e.getElementsByTagName(TAG_NUM_COMMENTS).item(0).getNodeValue())
+                //0
+                0//Integer.getInteger(((Element) e.getElementsByTagName(TAG_NUM_COMMENTS).item(0)).getChildNodes().item(0).getNodeValue())
 
         );
     }

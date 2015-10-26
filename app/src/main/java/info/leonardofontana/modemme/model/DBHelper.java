@@ -37,7 +37,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     //Contenuto
                     FeedContract.Entry.COLUMN_CONTENT + TYPE_TEXT + COMMA +
                     //Data Pubblicazione
-                    FeedContract.Entry.COLUMN_NAME_PUBLISHED + INT_TYPE +
+                    FeedContract.Entry.COLUMN_NAME_PUBLISHED + INT_TYPE + COMMA +
                     //Autore del Post
                     FeedContract.Entry.COLUMN_AUTHOR + TYPE_TEXT +
                     ")";

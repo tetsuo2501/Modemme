@@ -1,10 +1,12 @@
-package info.leonardofontana.modemme.sync;
+package info.leonardofontana.modemme;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.util.Log;
+
+import info.leonardofontana.modemme.sync.SyncAdapter;
 
 /**
  * Created by tetsu on 22/10/2015.

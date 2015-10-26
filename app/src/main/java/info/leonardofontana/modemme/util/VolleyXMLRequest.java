@@ -36,7 +36,7 @@ public class VolleyXMLRequest extends Request<Document> {
 
     @Override
     protected Response<Document> parseNetworkResponse(NetworkResponse response) {
-        String parsed;
+
         Document doc  = null;
         try {
 
@@ -66,6 +66,6 @@ public class VolleyXMLRequest extends Request<Document> {
 
     @Override
     protected void deliverResponse(Document response) {
-        listener.onResponse(response);
+       listener.onResponse(response);
     }
 }
