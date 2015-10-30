@@ -74,8 +74,8 @@ public class FeedParser {
                 ((Element) e.getElementsByTagName(TAG_ENCLOSURE).item(0)).getAttribute("url"),
                 ((Element) e.getElementsByTagName(TAG_COMMENT).item(0)).getChildNodes().item(0).getNodeValue(),
                 data,
-                e.getElementsByTagName(TAG_CONTENT).item(0).getNodeValue(),
-                //0
+                ((Element) e.getElementsByTagName(TAG_CONTENT).item(0)).getChildNodes().item(0).getNodeValue(),
+                //todo:implemenetare numeri commenti
                 0//Integer.getInteger(((Element) e.getElementsByTagName(TAG_NUM_COMMENTS).item(0)).getChildNodes().item(0).getNodeValue())
 
         );

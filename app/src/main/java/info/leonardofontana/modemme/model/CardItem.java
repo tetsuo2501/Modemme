@@ -3,6 +3,7 @@ package info.leonardofontana.modemme.model;
 import android.database.Cursor;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 
 import java.util.Date;
 
@@ -21,7 +22,8 @@ public class CardItem {
         //todo:implementare modello
         titolo = c.getString(ProjectionContract.PROJ_TITLE);
         descrizione = Html.fromHtml(c.getString(ProjectionContract.PROJ_DESCRIPTION));
-        contenuto = c.getString(ProjectionContract.PROJ_CONTENT);
+        //contenuto = c.getString(ProjectionContract.PROJ_CONTENT);
+        Log.d("CardItem","Valore contenuto: "+contenuto);
         link = c.getString(ProjectionContract.PROJ_LINK);
         immagine = c.getString(ProjectionContract.PROJ_MEDIA);
         num_commenti = c.getInt(ProjectionContract.PROJ_NUM_COM);

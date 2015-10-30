@@ -8,7 +8,7 @@ public class ProjectionContract {
             FeedContract.Entry._ID,
             FeedContract.Entry.COLUMN_NAME_TITLE,
             FeedContract.Entry.COLUMN_DESCRIPTION,
-            FeedContract.Entry.COLUMN_CONTENT,
+            //FeedContract.Entry.COLUMN_CONTENT,
             FeedContract.Entry.COLUMN_MEDIA_LINK,
             FeedContract.Entry.COLUMN_NAME_LINK,
             FeedContract.Entry.COLUMN_NAME_PUBLISHED,
@@ -17,9 +17,9 @@ public class ProjectionContract {
     public static final int PROJ_ID = 0;
     public static final int PROJ_TITLE = 1;
     public static final int PROJ_DESCRIPTION = 2;
-    public static final int PROJ_CONTENT = 3;
-    public static final int PROJ_MEDIA = 4;
-    public static final int PROJ_LINK = 5;
-    public static final int PROJ_DATE = 6;
-    public static final int PROJ_NUM_COM = 7;
+    //public static final int PROJ_CONTENT = 3;
+    public static final int PROJ_MEDIA = 3;
+    public static final int PROJ_LINK = 4;
+    public static final int PROJ_DATE = 5;
+    public static final int PROJ_NUM_COM = 6;
 }

@@ -4,24 +4,32 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Required to register a SyncStatusObserver to display a "syncing..." progress indicator. -->
-    <uses-permission android:name="android.permission.READ_SYNC_STATS"/>
+    <uses-permission android:name="android.permission.READ_SYNC_STATS" />
     <!-- Required to enable our SyncAdapter after it's created. -->
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
     <!-- Required because we're manually creating a new account. -->
-    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
+    <permission
+        android:name="info.leonardofontana.modemme.permission.C2D_MESSAGE"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="info.leonardofontana.modemme.permission.C2D_MESSAGE" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/icona_nera"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme"
+        android:name=".ModemmeApplication">
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar" >
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,55 +44,105 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity" />
-            <!--<intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>-->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="modemme.com"
+                    android:scheme="http" />
+                <data
+                    android:host="www.modemme.com"
+                    android:scheme="http" />
+            </intent-filter>
         </activity>
-        <!-- ContentProvider to store feed data.
+        <!--
+ContentProvider to store feed data.
 
 The "authorities" here are defined as part of a ContentProvider interface. It's used here
 as an attachment point for the SyncAdapter. See res/xml/syncadapter.xml and
 SyncService.java.
 
 Since this ContentProvider is not exported, it will not be accessible outside of this app's
-package. -->
+package.
+        -->
         <provider
-            android:name=".contentProvider.FeedProvider"
+            android:name=".sync.FeedProvider"
             android:authorities="info.leonardofontana.modemme"
             android:exported="false" />
 
-        <!-- This service implements our SyncAdapter. It needs to be exported, so that the system
-               sync framework can access it. -->
-        <service android:name=".SyncService"
-            android:exported="true">
-            <!-- This intent filter is required. It allows the system to launch our sync service
-            as needed. -->
+        <!--
+             This service implements our SyncAdapter. It needs to be exported, so that the system
+               sync framework can access it.
+        -->
+        <service
+            android:name=".SyncService"
+            android:exported="true" >
+
+            <!--
+            This intent filter is required. It allows the system to launch our sync service
+            as needed.
+            -->
             <intent-filter>
                 <action android:name="android.content.SyncAdapter" />
             </intent-filter>
             <!-- This points to a required XML file which describes our SyncAdapter. -->
-            <meta-data android:name="android.content.SyncAdapter"
+            <meta-data
+                android:name="android.content.SyncAdapter"
                 android:resource="@xml/syncadapter" />
         </service>
 
-        <!-- This implements the account we'll use as an attachment point for our SyncAdapter. Since
+        <!--
+             This implements the account we'll use as an attachment point for our SyncAdapter. Since
                 our SyncAdapter doesn't need to authenticate the current user (it just fetches a public RSS
                 feed), this account's implementation is largely empty.
 
                 It's also possible to attach a SyncAdapter to an existing account provided by another
-                package. In that case, this element could be omitted here. -->
-        <service android:name=".accounts.GenericAccountService">
+                package. In that case, this element could be omitted here.
+        -->
+        <service android:name=".accounts.GenericAccountService" >
+
             <!-- Required filter used by the system to launch our account service. -->
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
             <!-- This points to an XMLf ile which describes our account service. -->
-            <meta-data android:name="android.accounts.AccountAuthenticator"
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
                 android:resource="@xml/authenticator" />
         </service>
 
+        <receiver
+            android:name="com.google.android.gms.gcm.GcmReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.SEND" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
 
+                <category android:name="info.leonardofontana.modemme" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".gcm.GCMListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".gcm.GCMIDListenerService"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="com.google.android.gms.iid.InstanceID" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".RegistrationIntentService"
+            android:exported="false" >
+        </service>
     </application>
+
 </manifest>

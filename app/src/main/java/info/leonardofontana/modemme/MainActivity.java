@@ -2,14 +2,21 @@ package info.leonardofontana.modemme;
 
 import android.accounts.Account;
 import android.app.LoaderManager;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.CursorLoader;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.Loader;
+import android.content.SharedPreferences;
 import android.content.SyncStatusObserver;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 
+import android.preference.PreferenceManager;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +25,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import com.google.android.gms.analytics.Tracker;
+import com.google.android.gms.analytics.HitBuilders;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import info.leonardofontana.modemme.accounts.GenericAccountService;
 import info.leonardofontana.modemme.model.CardListAdapter;
@@ -25,13 +36,19 @@ import info.leonardofontana.modemme.model.FeedContract;
 import info.leonardofontana.modemme.model.ProjectionContract;
 import info.leonardofontana.modemme.util.SyncUtil;
 import info.leonardofontana.modemme.util.VolleyRequestQueue;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity  implements LoaderManager.LoaderCallbacks<Cursor>{
+    private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
+    public static final String REGISTRATION_COMPLETE = "registrationComplete";
+
     private RecyclerView recycler;
     private SwipeRefreshLayout swipeRefresh;
     private CardListAdapter cardListAdapter;
     private Object mSyncObserverHandle;
-    private static final String TAG = "Fragment";
+    private static final String TAG = "MsinActivity";
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+    private Tracker mTracker;
     /**
      * Create a new anonymous SyncStatusObserver. It's attached to the app's ContentResolver in
      * onResume(), and removed in onPause(). If status changes, it sets the state of the Refresh
@@ -54,7 +71,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         swipeRefresh = (SwipeRefreshLayout) findViewById(R.id.swiperefresh);
         mSyncStatusObserver = new MySyncStatusObserver(swipeRefresh);
         recycler.setLayoutManager(new LinearLayoutManager(this));
-        cardListAdapter = new CardListAdapter(this,null);
+        cardListAdapter = new CardListAdapter(this, null);
         recycler.setAdapter(cardListAdapter);
 
         SyncUtil.createSyncAccount(this);
@@ -66,11 +83,38 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
             }
         });
         getLoaderManager().initLoader(0, null, this);
+
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                SharedPreferences sharedPreferences =
+                        PreferenceManager.getDefaultSharedPreferences(context);
+                boolean sentToken = sharedPreferences
+                        .getBoolean(RegistrationIntentService.SENT_TOKEN_TO_SERVER, false);
+
+            }
+        };
+
+        if (checkPlayServices()) {
+            // Start IntentService to register this application with GCM.
+            Log.d(TAG,"avvio il servizio registrazione GCM");
+            Intent intent = new Intent(this, RegistrationIntentService.class);
+            startService(intent);
+        }
+
+        //Traker analytics
+        ModemmeApplication application = (ModemmeApplication) getApplication();
+        mTracker = application.getDefaultTracker();
     }
 
     public void refreshFromMenu(MenuItem i){
         Log.d(TAG, "avvio refresh contenuti");
         SyncUtil.triggerRefresh();
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
@@ -117,6 +161,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         Log.i(TAG,"Fine aggiornamento espongo risultati");
         cardListAdapter.changeCursor(data);
+        swipeRefresh.setRefreshing(false);
     }
 
     @Override
@@ -130,6 +175,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
             ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
             mSyncObserverHandle = null;
         }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
     }
 
     @Override
@@ -141,8 +187,29 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         final int mask = ContentResolver.SYNC_OBSERVER_TYPE_PENDING |
                 ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE;
         mSyncObserverHandle = ContentResolver.addStatusChangeListener(mask, mSyncStatusObserver);
+
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(REGISTRATION_COMPLETE));
+        Log.i(TAG, "Setting screen name: Activity Principale" );
+        mTracker.setScreenName("Activity principale");
+        mTracker.send(new HitBuilders.ScreenViewBuilder().build());
     }
 
+    private boolean checkPlayServices() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                        .show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
 
     class MySyncStatusObserver implements SyncStatusObserver {
         /** Callback invoked with the sync adapter status changes. */
@@ -179,7 +246,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
                             account, FeedContract.CONTENT_AUTHORITY);
                     boolean syncPending = ContentResolver.isSyncPending(
                             account, FeedContract.CONTENT_AUTHORITY);
-                    swipe.setRefreshing(syncActive || syncPending);
+                    //swipe.setRefreshing(syncActive || syncPending);
                 }
             });
         }

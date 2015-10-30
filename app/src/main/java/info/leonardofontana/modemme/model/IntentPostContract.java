@@ -5,7 +5,7 @@ package info.leonardofontana.modemme.model;
  */
 public class IntentPostContract {
     private final static String base ="info.leonardofontana.modemme.";
-    public final static String contenuto = base + "contenuto";
+
     public final static String link = base + "link";
-    public static final String titolo = base + "titolo";
+    //public static final String titolo = base + "titolo";
 }

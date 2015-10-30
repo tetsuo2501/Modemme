@@ -120,6 +120,7 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
             }
             for (FeedParser.Entry e : entries) {
                 entryMap.put(e.id, e);
+                Log.d(TAG,"Entry-id: "+e.id);
             }
 
 
@@ -147,23 +148,25 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                 int numCommenti = c.getInt(COL_NUM_COMM);
                 String media = c.getString(COL_MEDIA);
                 String commentsLink = c.getString(COL_COMM);
-                FeedParser.Entry match = entryMap.get(entryId);
+                FeedParser.Entry match = entryMap.get(link);
                 Log.d(TAG, "fine ritiro dei valori da db");
                 if (match != null) {
 
                     // Entry exists. Remove from entry map to prevent insert later.
-                    entryMap.remove(entryId);
+                    entryMap.remove(link);
                     // Check to see if the entry needs to be updated
                     Uri existingUri = FeedContract.Entry.CONTENT_URI.buildUpon()
                             .appendPath(Integer.toString(id)).build();
-                    if ((match.titolo != null && !match.titolo.equals(title)) ||
-                            (match.link != null && !match.link.equals(link)) ||
-                            (match.numeroCommenti != numCommenti) ||
+
+                    if (    (match.link != null && !match.link.equals(link))  ||
+                        (match.contenuto != null && !match.contenuto.equals(content)) ||
                             (match.descrizione != null && !match.descrizione.equals(description)) ||
-                            (match.mediaLink != null && !match.link.equals(media)) ||
-                            (match.data != published)) {
+                            match.numeroCommenti != numCommenti
+                            )
+                    {
                         // Update existing record
                         Log.i(TAG, "Scheduling update: " + existingUri);
+
                         batch.add(ContentProviderOperation.newUpdate(existingUri)
                                 .withValue(FeedContract.Entry.COLUMN_NAME_TITLE, title)
                                 .withValue(FeedContract.Entry.COLUMN_NAME_LINK, link)
@@ -176,10 +179,12 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                                 .withValue(FeedContract.Entry.COLUMN_COMMENT, commentsLink)
                                 .build());
                         syncResult.stats.numUpdates++;
+
                     } else {
                         Log.i(TAG, "No action: " + existingUri);
                     }
                 } else {
+
                     // Entry doesn't exist. Remove it from the database.
                     Uri deleteUri = FeedContract.Entry.CONTENT_URI.buildUpon()
                             .appendPath(Integer.toString(id)).build();
@@ -202,13 +207,14 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                             .withValue(FeedContract.Entry.COLUMN_DESCRIPTION, e.descrizione)
                             .withValue(FeedContract.Entry.COLUMN_NUMBERS_COMMENT, e.numeroCommenti)
                             .withValue(FeedContract.Entry.COLUMN_MEDIA_LINK, e.mediaLink)
-                            .withValue(FeedContract.Entry.COLUMN_COMMENT,e.linkCommenti)
+                            .withValue(FeedContract.Entry.COLUMN_COMMENT, e.linkCommenti)
                             .build());
                     syncResult.stats.numInserts++;
+                }
                     Log.i(TAG, "Merge solution ready. Applying batch update");
                     try {
                         contentResolver.applyBatch(FeedContract.CONTENT_AUTHORITY, batch);
-                        Log.d(TAG,"Batch effettuato");
+                        Log.d(TAG,"Batch effettuato con elementi "+batch.size());
                     }
                     catch (RemoteException e1){
                         Log.e(TAG, "Eccezione di remote exception durante inserimento dati",e1);
@@ -223,7 +229,7 @@ public class SyncAdapter  extends AbstractThreadedSyncAdapter {
                     // This sample doesn't support uploads, but if *your* code does, make sure you set
                     // syncToNetwork=false in the line above to prevent duplicate syncs.
 
-                }
+
 
 
 

@@ -4,4 +4,57 @@
     <string name="action_refresh">Aggiorna</string>
     <string name="comments">Commenti:</string>
     <string name="condividi">Condividi</string>
+    <string name="apriBrowser">Apri nel browser</string>
+    <string name="send_to">"Guarda il post su Modemme: "</string>
+    <string name="titoloNotifica">"C'è un nuovo articolo"</string>
+    <string name="shareMessage">Condividi articolo</string>
+    <string name="startHtml">"&lt;html&gt;
+&lt;head&gt;
+    &lt;link rel=&#39;stylesheet&#39; id=&#39;style-css&#39;   href=&#39;http://www.modemme.com/wp-content/themes/mokka/style.css?ver=1&#39; type=&#39;text/css&#39; media=&#39;all&#39; /&gt;
+    &lt;style type=&quot;text/css&quot;&gt;
+
+
+body, .widget-title  { font-family: &quot;Lato&quot;, sans-serif;}
+h1, h2, h3, h4, h5, h6, .continue-reading, blockquote, .quote-wrapper &gt; blockquote h2, .link-wrapper, .dropdown-post-title, .sub-links, .tag-line, .copyright-wrapper, .post-tags, .comments-title-wrapper p, .fn, .comment-metadata, .comments-title-wrapper, .nav-sub-posts a, .nav-sub-menus a { font-family: &quot;Prata&quot;, serif;}
+
+
+div.jp-play-bar, div.jp-volume-bar-value, .primary-nav .nav-sub-wrap .nav-sub-posts .thumb-wrap, .dropdown-menu&gt;.active&gt;a, .dropdown-menu&gt;.active&gt;a:hover, .dropdown-menu&gt;.active&gt;a:focus {	background-color: #0a0a0a;}
+.pagination&gt;li&gt;a:hover, .pagination&gt;li&gt;span:hover, .pagination&gt;li&gt;a:focus, .pagination&gt;li&gt;span:focus, .share-wrapper ul li a:hover, .pagination .current {	border: 1px solid #0a0a0a;
+}
+
+
+&lt;/style&gt;
+
+&lt;link rel=&#39;stylesheet&#39; id=&#39;open-sans-css&#39;  href=&#39;https://fonts.googleapis.com/css?family=Open+Sans%3A300italic%2C400italic%2C600italic%2C300%2C400%2C600&amp;#038;subset=latin%2Clatin-ext&amp;#038;ver=4.3.1&#39; type=&#39;text/css&#39; media=&#39;all&#39; /&gt;
+&lt;link rel=&#39;stylesheet&#39; id=&#39;google-fonts-css&#39;  href=&#39;http://fonts.googleapis.com/css?subset=latin%2Clatin-ext%2Ccyrillic%2Ccyrillic-ext%2Cgreek-ext%2Cgreek%2Cvietnamese&amp;#038;family=Lato%3A100italic%2C300italic%2C400italic%2C600italic%2C700italic%2C800italic%2C100%2C400%2C300%2C600%2C700%2C800%7CLato%3A100italic%2C300italic%2C400italic%2C600italic%2C700italic%2C800italic%2C100%2C400%2C300%2C600%2C700%2C800%7CPrata%3A100italic%2C300italic%2C400italic%2C600italic%2C700italic%2C800italic%2C100%2C400%2C300%2C600%2C700%2C800%7CLato%3A100italic%2C300italic%2C400italic%2C600italic%2C700italic%2C800italic%2C100%2C400%2C300%2C600%2C700%2C800+rel%3D%27stylesheet%27+type%3D%27text%2Fcss&amp;#038;ver=4.3.1&#39; type=&#39;text/css&#39; media=&#39;all&#39; /&gt;
+&lt;style type=&#39;text/css&#39;&gt;
+#wpadminbar .quicklinks li#wp-admin-bar-stats {
+	height: 28px;
+}
+#wpadminbar .quicklinks li#wp-admin-bar-stats a {
+	height: 28px;
+	padding: 0;
+}
+#wpadminbar .quicklinks li#wp-admin-bar-stats a div {
+	height: 28px;
+	width: 95px;
+	overflow: hidden;
+	margin: 0 10px;
+}
+#wpadminbar .quicklinks li#wp-admin-bar-stats a:hover div {
+	width: auto;
+	margin: 0 8px 0 10px;
+}
+#wpadminbar .quicklinks li#wp-admin-bar-stats a img {
+	height: 24px;
+	padding: 2px 0;
+	max-width: none;
+	border: none;
+}
+&lt;/style&gt;
+    &lt;/head&gt;&lt;body class=&quot;home blog logged-in admin-bar no-customize-support ajax-zilla-likes chrome fave-body&quot;&gt;
+    &lt;div id=&quot;outer-wrap container&quot;&gt;"
+    </string>
+    <string name="endHtml">&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</string>
+
 </resources>

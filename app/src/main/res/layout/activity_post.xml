@@ -21,17 +21,10 @@
             android:layout_width="match_parent" android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary" app:popupTheme="@style/AppTheme.PopupOverlay"
             android:titleTextColor="@android:color/black"
-            android:subtitleTextColor="@android:color/black"/>
+            android:subtitleTextColor="@android:color/black"
+            android:theme="@style/ActionBarTheme"/>
 
     </android.support.design.widget.AppBarLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Medium Text"
-        android:id="@+id/textView"
-        android:layout_gravity="center_horizontal" />
 
     <WebView
         android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package info.leonardofontana.modemme.contentProvider;
+package info.leonardofontana.modemme.sync;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
