@@ -19,6 +19,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 
 import info.leonardofontana.modemme.R;
 import info.leonardofontana.modemme.MainActivity;
+import info.leonardofontana.modemme.util.SyncUtil;
 import info.leonardofontana.modemme.util.VolleyRequestQueue;
 
 /**
@@ -61,6 +62,7 @@ public class GCMListenerService extends GcmListenerService {
      * @param message GCM message received.
      */
     private void sendNotification(final Bundle message) {
+        SyncUtil.triggerRefresh();
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,

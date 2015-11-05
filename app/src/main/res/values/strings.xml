@@ -8,7 +8,7 @@
     <string name="send_to">"Guarda il post su Modemme: "</string>
     <string name="titoloNotifica">"C'è un nuovo articolo"</string>
     <string name="shareMessage">Condividi articolo</string>
-    <string name="startHtml">"&lt;html&gt;
+    <string name="startHtml" translatable="false">"&lt;html&gt;
 &lt;head&gt;
     &lt;link rel=&#39;stylesheet&#39; id=&#39;style-css&#39;   href=&#39;http://www.modemme.com/wp-content/themes/mokka/style.css?ver=1&#39; type=&#39;text/css&#39; media=&#39;all&#39; /&gt;
     &lt;style type=&quot;text/css&quot;&gt;
@@ -55,6 +55,6 @@ div.jp-play-bar, div.jp-volume-bar-value, .primary-nav .nav-sub-wrap .nav-sub-po
     &lt;/head&gt;&lt;body class=&quot;home blog logged-in admin-bar no-customize-support ajax-zilla-likes chrome fave-body&quot;&gt;
     &lt;div id=&quot;outer-wrap container&quot;&gt;"
     </string>
-    <string name="endHtml">&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string name="endHtml" translatable="false">&lt;/div&gt;&lt;/body&gt;&lt;/html&gt;</string>
 
 </resources>

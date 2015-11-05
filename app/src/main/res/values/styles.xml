@@ -1,18 +1,26 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light">
+    <style name="AppTheme" parent="@style/Theme.AppCompat.NoActionBar">
         <!-- Customize your theme here.
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 -->
     </style>
-    <style name="AppTheme.NoActionBar">
+    <style name="AppTheme.NoActionBar" parent="@style/Theme.AppCompat.Light.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="actionBarStyle">@style/ActionBarTheme</item>
+
+        <item name="selectableItemBackground">?android:selectableItemBackground</item>
+        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
+        <item name="colorControlHighlight">@android:color/holo_green_dark</item>
+        <item name="subtitleTextColor">@style/StileSottoTitolo</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Dark" />
 
     <style name="Modemme" parent="@style/Theme.AppCompat.Light.NoActionBar" >
@@ -25,15 +33,17 @@
         <item name="selectableItemBackground">?android:selectableItemBackground</item>
         <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
         <item name="colorControlHighlight">@android:color/holo_green_dark</item>
-
+        <item name="subtitleTextColor">@style/StileSottoTitolo</item>
     </style>
 
     <style name="TextViewItemBody" parent="@android:style/TextAppearance.Small">
         <item name="fontPath">fonts/Lato-Regular.ttf</item>
     </style>
-    <style name="stileSottoTitolo" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle">
-        <item name="android:textColor">@android:color/darker_gray</item>
+
+    <style name="StileSottoTitolo" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@android:color/holo_green_dark</item>
     </style>
+
     <style name="TextViewItemTitle" parent="@android:style/TextAppearance.Medium">
         <item name="fontPath">fonts/Prata-Regular.ttf</item>
     </style>
