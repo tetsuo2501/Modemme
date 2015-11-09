@@ -34,6 +34,7 @@
         <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
         <item name="colorControlHighlight">@android:color/holo_green_dark</item>
         <item name="subtitleTextColor">@style/StileSottoTitolo</item>
+        <!--<item name="android:icon">@drawable/icona_nera</item>-->
     </style>
 
     <style name="TextViewItemBody" parent="@android:style/TextAppearance.Small">

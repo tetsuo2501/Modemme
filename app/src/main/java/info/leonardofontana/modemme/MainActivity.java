@@ -61,9 +61,12 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.icona_nera);
+        toolbar.setLogo(R.drawable.modemme_logo);
+
+
         //////Inizializzo la coda dei download con cache
         VolleyRequestQueue.getInstance(getApplicationContext());
 
@@ -75,6 +78,7 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         recycler.setAdapter(cardListAdapter);
 
         SyncUtil.createSyncAccount(this);
+
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

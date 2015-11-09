@@ -8,6 +8,7 @@
     <string name="send_to">"Guarda il post su Modemme: "</string>
     <string name="titoloNotifica">"C'è un nuovo articolo"</string>
     <string name="shareMessage">Condividi articolo</string>
+
     <string name="startHtml" translatable="false">"&lt;html&gt;
 &lt;head&gt;
     &lt;link rel=&#39;stylesheet&#39; id=&#39;style-css&#39;   href=&#39;http://www.modemme.com/wp-content/themes/mokka/style.css?ver=1&#39; type=&#39;text/css&#39; media=&#39;all&#39; /&gt;
