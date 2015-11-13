@@ -49,6 +49,9 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
     private static final String TAG = "MsinActivity";
     private BroadcastReceiver mRegistrationBroadcastReceiver;
     private Tracker mTracker;
+    private SharedPreferences sharedPreferences;
+
+    private boolean notificheAttivate;
     /**
      * Create a new anonymous SyncStatusObserver. It's attached to the app's ContentResolver in
      * onResume(), and removed in onPause(). If status changes, it sets the state of the Refresh
@@ -88,6 +91,9 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         });
         getLoaderManager().initLoader(0, null, this);
 
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        notificheAttivate = sharedPreferences.getBoolean(getString(R.string.stato_notifiche),true);
+
         mRegistrationBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
@@ -109,11 +115,27 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
         //Traker analytics
         ModemmeApplication application = (ModemmeApplication) getApplication();
         mTracker = application.getDefaultTracker();
+        SyncUtil.triggerRefresh();
     }
 
     public void refreshFromMenu(MenuItem i){
         Log.d(TAG, "avvio refresh contenuti");
+        swipeRefresh.setRefreshing(true);
         SyncUtil.triggerRefresh();
+    }
+
+    public void attivaNotifiche(MenuItem i){
+        notificheAttivate = true;
+        SharedPreferences.Editor ed = sharedPreferences.edit();
+        ed.putBoolean(getString(R.string.stato_notifiche),true);
+        ed.commit();
+    }
+
+    public void disattivaNotifiche( MenuItem i){
+        notificheAttivate = false;
+        SharedPreferences.Editor ed = sharedPreferences.edit();
+        ed.putBoolean(getString(R.string.stato_notifiche),false);
+        ed.commit();
     }
 
     @Override
@@ -125,6 +147,18 @@ public class MainActivity extends AppCompatActivity  implements LoaderManager.Lo
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem attivaNotifiche =  menu.findItem(R.id.action_enable_notification);
+        MenuItem disattivaNotifiche = menu.findItem(R.id.action_disable_notifications);
+
+
+        attivaNotifiche.setVisible(!notificheAttivate);
+        disattivaNotifiche.setVisible(notificheAttivate);
+
         return true;
     }
 

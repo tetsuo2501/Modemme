@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Modemme</string>
+
     <string name="action_refresh">Aggiorna</string>
     <string name="apriBrowser">Apri nel browser</string>
     <string name="comments">Commenti:</string>
@@ -9,4 +9,6 @@
     <string name="titoloNotifica">"C'è un nuovo articolo"</string>
     <string name="action_settings">Impostazioni</string>
     <string name="shareMessage">Condividi articolo</string>
+    <string name="disable_notification">Disattiva le notifiche</string>
+    <string name="enable_notification">Attiva le notifiche</string>
 </resources>

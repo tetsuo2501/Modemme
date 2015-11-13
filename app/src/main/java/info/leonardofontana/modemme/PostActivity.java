@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,8 +18,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.TextView;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import info.leonardofontana.modemme.model.FeedContract;
 import info.leonardofontana.modemme.model.IntentPostContract;
+import info.leonardofontana.modemme.util.VolleyRequestQueue;
 
 /**
  * Created by tetsu on 26/10/2015.
@@ -27,12 +33,13 @@ public class PostActivity extends AppCompatActivity {
     public String titolo;
     public String link;
     public String contenuto;
-
+    public String linkImmagine;
 
     private enum PROJ{
         ENTRY(FeedContract.Entry.COLUMN_NAME_ENTRY_ID,0),
         CONTENT(FeedContract.Entry.COLUMN_CONTENT,1),
-        TITLE(FeedContract.Entry.COLUMN_NAME_TITLE,2);
+        TITLE(FeedContract.Entry.COLUMN_NAME_TITLE,2),
+        IMAGE(FeedContract.Entry.COLUMN_MEDIA_LINK,3);
         private int col;
         private String name;
         PROJ(String columnContent, int i) {
@@ -48,7 +55,7 @@ public class PostActivity extends AppCompatActivity {
             return name;
         }
         public static String[] getPROJ(){
-            return new String[]{ PROJ.ENTRY.getName(), PROJ.CONTENT.getName(), PROJ.TITLE.getName()};
+            return new String[]{ PROJ.ENTRY.getName(), PROJ.CONTENT.getName(), PROJ.TITLE.getName(),PROJ.IMAGE.getName()};
         }
     }
 
@@ -84,6 +91,7 @@ public class PostActivity extends AppCompatActivity {
         if(mCursor.moveToFirst()) {
             contenuto = mCursor.getString(PROJ.CONTENT.getCol());
             titolo = mCursor.getString(PROJ.TITLE.getCol());
+            linkImmagine = mCursor.getString(PROJ.IMAGE.getCol());
             Log.d(TAG, "Contenuto preso da db");
         }
         else{
@@ -100,16 +108,35 @@ public class PostActivity extends AppCompatActivity {
 
         //Setto il nrowser interno
         WebSettings webViewSettings = webview.getSettings();
-        webViewSettings.setUseWideViewPort(true);
-        webViewSettings.setLoadWithOverviewMode(true);
-        webViewSettings.setMinimumFontSize(40);
-        webViewSettings.setDefaultFixedFontSize(40);
-        webViewSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
-        webViewSettings.setJavaScriptEnabled(true);
+        //webViewSettings.setUseWideViewPort(true);
+        //webViewSettings.setLoadWithOverviewMode(true);
+        //webViewSettings.setMinimumFontSize(40);
+        //webViewSettings.setDefaultFixedFontSize(40);
+        //webViewSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.TEXT_AUTOSIZING);
+        webViewSettings.setJavaScriptEnabled(false);
         webViewSettings.setSupportZoom(true);
 
-        webview.loadDataWithBaseURL("http://modemme.com",formattaPagina(contenuto),"text/html","UTF-8","");
+        webview.loadDataWithBaseURL("http://modemme.com", formattaPagina(contenuto), "text/html", "UTF-8", "");
         toolbar.setSubtitle(titolo);
+        ((NetworkImageView)findViewById(R.id.evidence_image)).setImageUrl(
+                linkImmagine,
+                VolleyRequestQueue.getInstance(
+                        getApplicationContext()).getImageLoader()
+        );/*
+        ((CollapsingToolbarLayout)findViewById(R.id.collapsing_toolbar)).setExpandedTitleColor(
+                getResources().getColor(android.R.color.transparent)
+        );*/
+        //fixApi21ToolBarBug(toolbar);
+
+    }
+
+    private void fixApi21ToolBarBug(Toolbar toolbar){
+        if(Build.VERSION.SDK_INT!=21) return; //only on api 21
+        final int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        final int result = (resourceId > 0) ? getResources().getDimensionPixelSize(resourceId) * 2 : 0;
+        final CollapsingToolbarLayout.LayoutParams params = (CollapsingToolbarLayout.LayoutParams) toolbar.getLayoutParams();
+        params.topMargin -= result;
+        toolbar.setLayoutParams(params);
     }
 
     private  String formattaPagina(String contenuto){

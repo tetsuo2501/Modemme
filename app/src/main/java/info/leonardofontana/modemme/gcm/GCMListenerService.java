@@ -4,10 +4,12 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.content.Intent;
@@ -52,7 +54,12 @@ public class GCMListenerService extends GcmListenerService {
          * In some cases it may be useful to show a notification indicating to the user
          * that a message was received.
          */
-        sendNotification(data);
+        SyncUtil.triggerRefresh();
+        Context context = getApplicationContext();
+        if(
+            PreferenceManager.getDefaultSharedPreferences(context)
+                    .getBoolean(context.getString(R.string.stato_notifiche),true))
+            sendNotification(data);
         // [END_EXCLUDE]
     }
 
@@ -62,7 +69,7 @@ public class GCMListenerService extends GcmListenerService {
      * @param message GCM message received.
      */
     private void sendNotification(final Bundle message) {
-        SyncUtil.triggerRefresh();
+
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         final PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
@@ -85,12 +92,14 @@ public class GCMListenerService extends GcmListenerService {
                                                     new NotificationCompat.Builder(context)
                                                             .setSmallIcon(R.drawable.icona_bianca)
                                                             .setContentTitle(context.getString(R.string.titoloNotifica))
-                                                            .setContentText(message.getString("titolo"))
+                                                            //.setContentText(message.getString("titolo"))
                                                             .setAutoCancel(true)
                                                             .setSound(defaultSoundUri)
                                                             .setContentIntent(pendingIntent)
                                                             .setStyle(new NotificationCompat.BigPictureStyle()
-                                                                    .bigPicture(response))
+                                                                    .bigPicture(response)
+                                                                    .setSummaryText(message.getString("titolo"))
+                                                            )
                                                             .build());
 
                                 }
@@ -101,7 +110,7 @@ public class GCMListenerService extends GcmListenerService {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            //todo:lancia notifica senza immagini
+
                             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
                                     .notify(0,
                                             new NotificationCompat.Builder(context)

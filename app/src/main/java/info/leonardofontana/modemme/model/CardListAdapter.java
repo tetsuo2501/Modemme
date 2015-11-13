@@ -42,7 +42,8 @@ public class CardListAdapter extends CursorRecyclerViewAdapter<CardViewHolder> {
     @Override
     public void onBindViewHolder(CardViewHolder viewHolder, Cursor cursor) {
         CardItem cardItem = new CardItem(cursor);
-        viewHolder.immagine.setImageUrl(cardItem.immagine, VolleyRequestQueue.getInstance(context).getImageLoader());
+        viewHolder.immagine.setImageUrl(cardItem.immagine,
+                VolleyRequestQueue.getInstance(context).getImageLoader());
         viewHolder.titolo.setText(cardItem.titolo);
         Log.d(TAG, "Titolo da CardViewHolder: " + cardItem.titolo);
         viewHolder.descrizione.setText(cardItem.descrizione);

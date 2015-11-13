@@ -3,9 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".MainActivity">
    <item android:id="@+id/action_refresh" android:title="@string/action_refresh"
         android:onClick="refreshFromMenu" android:icon="@drawable/ic_refresh_black"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+        android:orderInCategory="100" app:showAsAction="never" />
 
-    <item android:id="@+id/action_notification" android:title="@string/action_refresh"
-        android:onClick="refreshFromMenu" android:icon="@drawable/ic_refresh_black"
-        android:orderInCategory="100" app:showAsAction="ifRoom" />
+    <item android:id="@+id/action_enable_notification" android:title="@string/enable_notification"
+        android:onClick="attivaNotifiche" android:icon="@drawable/notifications_on"
+        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item android:id="@+id/action_disable_notifications" android:title="@string/disable_notification"
+        android:onClick="disattivaNotifiche" android:icon="@drawable/notifications_off"
+        android:orderInCategory="100" app:showAsAction="never" />
 </menu>
