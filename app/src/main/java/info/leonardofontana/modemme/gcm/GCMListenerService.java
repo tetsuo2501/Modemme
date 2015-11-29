@@ -86,6 +86,8 @@ public class GCMListenerService extends GcmListenerService {
                             new Response.Listener<Bitmap>() {
                                 @Override
                                 public void onResponse(Bitmap response) {
+                                    String titolo = message.getString("titolo");
+                                    titolo = (titolo == null) ? "" : titolo;
                                     //Lancia notifica con immage
                                     ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
                                             .notify(0,
@@ -98,7 +100,7 @@ public class GCMListenerService extends GcmListenerService {
                                                             .setContentIntent(pendingIntent)
                                                             .setStyle(new NotificationCompat.BigPictureStyle()
                                                                     .bigPicture(response)
-                                                                    .setSummaryText(message.getString("titolo"))
+                                                                    .setSummaryText(titolo)
                                                             )
                                                             .build());
 
@@ -110,13 +112,14 @@ public class GCMListenerService extends GcmListenerService {
                     new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-
+                            String titolo = message.getString("titolo");
+                            titolo = (titolo == null) ? "" : titolo;
                             ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE))
                                     .notify(0,
                                             new NotificationCompat.Builder(context)
                                                     .setSmallIcon(R.drawable.icona_bianca)
                                                     .setContentTitle(context.getString(R.string.titoloNotifica))
-                                                    .setContentText(message.getString("titolo"))
+                                                    .setContentText(titolo)
                                                     .setAutoCancel(true)
                                                     .setSound(defaultSoundUri)
                                                     .setContentIntent(pendingIntent)

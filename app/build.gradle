@@ -10,11 +10,12 @@ android {
             storePassword 'claudia'
         }
         lintOptions {
+            //Fix Google Plugin bug
             disable 'MissingTranslation'
         }
     }
     compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    buildToolsVersion "23.0.2"
     defaultConfig {
         applicationId "info.leonardofontana.modemme"
         minSdkVersion 15
@@ -31,6 +32,11 @@ android {
         debug {
             minifyEnabled false
         }
+    }
+    //Work around to avoid android plugin bug
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
     }
 }
 
